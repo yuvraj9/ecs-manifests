@@ -1,0 +1,32 @@
+{
+    "cluster": "ecs-stage",
+    "serviceName": "cadvisor",
+    "taskDefinition": "cadvisor-definition:4",
+    "serviceRegistries": [],
+    "launchType": "EC2",
+    "deploymentConfiguration": {
+        "deploymentCircuitBreaker": {
+            "enable": false,
+            "rollback": false
+          }
+    },
+    "placementConstraints": [],
+    "placementStrategy": [],
+    "networkConfiguration": {
+        "awsvpcConfiguration": {
+            "subnets": [
+              "subnet-xxxxxxxxxxxx",
+              "subnet-xxxxx",
+              "subnet-xxxxxxxxxxxxx"
+            ],
+            "securityGroups": [
+              "sg-xxxxxxxxxxxxx"
+            ],
+            "assignPublicIp": "DISABLED"
+          }
+    },
+    "schedulingStrategy": "DAEMON",
+    "enableECSManagedTags": false,
+    "propagateTags": "NONE",
+    "enableExecuteCommand": false
+}

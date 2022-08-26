@@ -1,0 +1,32 @@
+{
+    "cluster": "ecs-stage",
+    "serviceName": "node-exporter",
+    "taskDefinition": "node-exporter-definition:2",
+    "serviceRegistries": [],
+    "launchType": "EC2",
+    "deploymentConfiguration": {
+        "deploymentCircuitBreaker": {
+            "enable": false,
+            "rollback": false
+          }
+    },
+    "placementConstraints": [],
+    "placementStrategy": [],
+    "networkConfiguration": {
+        "awsvpcConfiguration": {
+            "subnets": [
+              "subnet-xxxxxxxxxxxxxxxx",
+              "subnet-xxxxxxx",
+              "subnet-xxxxxxxxxxxxx"
+            ],
+            "securityGroups": [
+              "sg-xxxxxxxxxxxxxx"
+            ],
+            "assignPublicIp": "DISABLED"
+          }
+    },
+    "schedulingStrategy": "DAEMON",
+    "enableECSManagedTags": false,
+    "propagateTags": "NONE",
+    "enableExecuteCommand": false
+}

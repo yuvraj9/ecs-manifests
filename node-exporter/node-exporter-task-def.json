@@ -1,0 +1,83 @@
+{
+    "family": "node-exporter-definition",
+    "executionRoleArn": "arn:aws:iam::0000000000:role/fluent-bit-daemon-task-execution-role",
+    "networkMode": "awsvpc",
+    "taskRoleArn": "arn:aws:iam::000000000:role/fluent-bit-daemon-task-role",
+    "containerDefinitions": [
+        {
+            "name": "node-exporter",
+            "image": "prom/node-exporter",
+            "cpu": 256,
+            "memory": 256,
+            "memoryReservation": 128,
+            "portMappings": [
+                {
+                    "containerPort": 9100,
+                    "hostPort": 9100,
+                    "protocol": "tcp"
+                }
+            ],
+            "mountPoints": [
+                {
+                    "sourceVolume": "root",
+                    "containerPath": "/rootfs",
+                    "readOnly": true
+                },
+                {
+                    "sourceVolume": "proc",
+                    "containerPath": "/host/proc",
+                    "readOnly": true
+                },
+                {
+                    "sourceVolume": "sys",
+                    "containerPath": "/host/sys",
+                    "readOnly": true
+                }
+            ],
+            "essential": true,
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-create-group": "true",
+                    "awslogs-group": "/ecs/node-exporter",
+                    "awslogs-region": "us-west-2",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "command": [
+                "--path.procfs=/host/proc",
+                "--path.rootfs=/rootfs",
+                "--path.sysfs=/host/sys",
+                "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+            ],
+            "dockerLabels": {
+                "ECS_PROMETHEUS_EXPORTER_PORT": "9100"
+            }
+        }
+    ],
+    "volumes": [
+        {
+            "name": "root",
+            "host": {
+                "sourcePath": "/"
+            }
+        },
+        {
+            "name": "proc",
+            "host": {
+                "sourcePath": "/proc"
+            }
+        },
+        {
+            "name": "sys",
+            "host": {
+                "sourcePath": "/sys"
+            }
+        }
+    ],
+    "requiresCompatibilities": [
+        "EC2"
+    ],
+    "cpu": "256",
+    "memory": "256"
+}

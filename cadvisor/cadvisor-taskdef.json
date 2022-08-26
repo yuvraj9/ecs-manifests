@@ -1,0 +1,106 @@
+{
+    "family": "cadvisor-definition",
+    "executionRoleArn": "arn:aws:iam::00000000000:role/fluent-bit-daemon-task-execution-role",
+    "networkMode": "awsvpc",
+    "taskRoleArn": "arn:aws:iam::00000000000:role/fluent-bit-daemon-task-role",
+        "containerDefinitions": [
+            {
+                "name": "cadvisor-exporter",
+                "image": "google/cadvisor",
+                "cpu": 512,
+                "memory": 256,
+                "memoryReservation": 128,
+                "portMappings": [
+                    {
+                        "containerPort": 8080,
+                        "hostPort": 8080,
+                        "protocol": "tcp"
+                    }
+                ],
+                "dockerLabels": {
+                    "ECS_PROMETHEUS_EXPORTER_PORT": "8080"
+                },
+                "logConfiguration": {
+                    "logDriver": "awslogs",
+                    "options": {
+                      "awslogs-create-group": "true",
+                      "awslogs-group": "/ecs/cadvisor",
+                      "awslogs-region": "us-west-2",
+                      "awslogs-stream-prefix": "ecs"
+                    }
+                },
+                "essential": true,
+                "mountPoints": [
+                    {
+                        "sourceVolume": "root",
+                        "containerPath": "/rootfs",
+                        "readOnly": true
+                    },
+                    {
+                        "sourceVolume": "cgroup",
+                        "containerPath": "/cgroup",
+                        "readOnly": true
+                    },
+                    {
+                        "sourceVolume": "var_run",
+                        "containerPath": "/var/run",
+                        "readOnly": true
+                    },
+                    {
+                        "sourceVolume": "var_lib_docker",
+                        "containerPath": "/var/lib/docker",
+                        "readOnly": true
+                    },
+                    {
+                        "sourceVolume": "dev_disk",
+                        "containerPath": "/dev/disk",
+                        "readOnly": true
+                    },
+                    {
+                        "sourceVolume": "cgroup",
+                        "containerPath": "/sys/fs/cgroup",
+                        "readOnly": true
+                    }
+                ],
+                "privileged": true,
+                "readonlyRootFilesystem": false
+            }
+        ],
+        "volumes": [
+            {
+                "name": "root",
+                "host": {
+                    "sourcePath": "/"
+                }
+            },
+            {
+                "name": "cgroup",
+                "host": {
+                    "sourcePath": "/cgroup"
+                }
+            },
+            {
+                "name": "var_run",
+                "host": {
+                    "sourcePath": "/var/run"
+                }
+            },
+            {
+                "name": "var_lib_docker",
+                "host": {
+                    "sourcePath": "/var/lib/docker"
+                }
+            },
+            {
+                "name": "dev_disk",
+                "host": {
+                    "sourcePath": "/dev/disk"
+                }
+            }
+        ],
+    "requiresCompatibilities": [
+        "EC2"
+    ],
+    "cpu": "512",
+    "memory": "256"
+}
